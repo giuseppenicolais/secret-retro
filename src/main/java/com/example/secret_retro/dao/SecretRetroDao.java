@@ -1,7 +1,6 @@
 package com.example.secret_retro.dao;
 
 import com.example.secret_retro.model.BubbleData;
-import com.example.secret_retro.model.LabelType;
 import com.example.secret_retro.model.MainConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +9,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.Arrays;
+
 import java.util.List;
 
 @Slf4j
 @Repository
 public class SecretRetroDao implements ISecretRetroDao {
 
+    private static final String INSERT_FEEDBACK = "INSERT INTO secret_retro.feedbacks (bad, good, rating) VALUES(?, ?, ?);";
     @Autowired
     private MainConfig mainConfig;
 
@@ -30,13 +30,9 @@ public class SecretRetroDao implements ISecretRetroDao {
 BeanPropertyRowMapper<BubbleData> bubbleDataBeanPropertyRowMapper = BeanPropertyRowMapper.newInstance(BubbleData.class);
 
     @Override
-    public void insertFeedback(String date, String goodLabel, String badLabel) {
-        // TODO insert into feedbacks collection
-    }
-
-    @Override
-    public void insertDailyRating(String date, int dailyRating) {
-        // TODO insert into ratings collection
+    public void insertFeedback(String date, String goodLabel, String badLabel, int rating) {
+        jdbcTemplate.update(INSERT_FEEDBACK, badLabel, goodLabel, rating);
+        log.info("Feedback successfully inserted");
     }
 
     @Override
