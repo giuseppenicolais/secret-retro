@@ -5,10 +5,7 @@ import com.example.secret_retro.model.LabelType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.Block;
-import com.mongodb.client.AggregateIterable;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -57,13 +54,14 @@ public class SecretRetroDao implements ISecretRetroDao {
             "    \"$limit\": 5000\n" +
             "  }\n" +
             "]";
-    private MongoDatabase database = null;
+    private MongoDatabase database;
+    private MongoCollection feedbacksCollection;
 
     SecretRetroDao(){
         MongoClient mongoClient = MongoClients.create(
                 "mongodb+srv://secret-retro:secret-retro@cluster0.cstc5.mongodb.net/secretretro?retryWrites=true&w=majority");
         database = mongoClient.getDatabase("secretretro");
-        database.getCollection("feedbacks");
+        feedbacksCollection = database.getCollection("feedbacks");
     }
 
 
@@ -89,7 +87,7 @@ public class SecretRetroDao implements ISecretRetroDao {
         BubbleData b1 = BubbleData.builder().label("wfh").type(LabelType.BAD.toString()).value(10).build();
         BubbleData b2 = BubbleData.builder().label("spring planning").type(LabelType.GOOD.toString()).value(3).build();
        BubbleData b3 = BubbleData.builder().label("P1 bugfix").type(LabelType.GOOD.toString()).value(2).build();
-        log.info("There are " + database.getCollection("feedbacks").countDocuments()+ " documents ");
+        log.info("There are " + feedbacksCollection.countDocuments()+ " documents ");
         List<Bson> averageMetricQuery = null;
         try {
             averageMetricQuery = (List<Bson>) new ObjectMapper().readValue(QUERY_AVERAGE, List.class);
