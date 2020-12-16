@@ -2,6 +2,7 @@ package com.example.secret_retro.service;
 
 import com.example.secret_retro.dao.SecretRetroDao;
 import com.example.secret_retro.model.BubbleData;
+import com.example.secret_retro.model.DailyRating;
 import com.example.secret_retro.model.FeedMeBody;
 import com.example.secret_retro.model.Feedback;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +55,14 @@ public class SecretRetroService implements ISecretRetroService {
                 .avgRating(avgRating)
                 .dateRange(lastMonth)
                 .labels(bubbleDataList).build();
+    }
+
+    @Override
+    public List<DailyRating> getLastMonthRating() {
+        LocalDate to = LocalDate.now();
+        LocalDate from = to.minus(30, ChronoUnit.DAYS);
+
+        return secretRetroDao.getLastMonthRating(from, to);
     }
 
     private String calculateLastMonthDateRange(LocalDate from, LocalDate to) {
