@@ -12,6 +12,7 @@ import org.bson.conversions.Bson;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class SecretRetroDao implements ISecretRetroDao {
             "  },\n" +
             "  {\n" +
             "    \"$project\": {\n" +
-            "      \"x\": \"$__alias_0\",\n" +
+            "      \"average_rating\": \"$__alias_0\",\n" +
             "      \"_id\": 0\n" +
             "    }\n" +
             "  },\n" +
@@ -94,7 +95,15 @@ public class SecretRetroDao implements ISecretRetroDao {
         } catch (JsonProcessingException e) {
             log.error(e.getMessage(), e);
         }
-        //database.getCollection("feedbacks").aggregate(averageMetricQuery).forEach((Block<? super Document>) item->log.info(item.toJson()));
+
+        List<Integer> averageRating = new ArrayList<>();
+        Block<Document> block = new Block<Document>() {
+            public void apply(Document document) {
+                averageRating.add(document.getInteger("average_rating"));
+            }
+        };
+        //database.getCollection("feedbacks").aggregate(averageMetricQuery).forEach(block);
+        //log.info("Average is "+averageRating.get(0));
         return Arrays.asList(b1, b2, b3);
     }
 }
