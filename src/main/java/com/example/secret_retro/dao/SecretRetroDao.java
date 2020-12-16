@@ -38,7 +38,9 @@ BeanPropertyRowMapper<BubbleData> bubbleDataBeanPropertyRowMapper = BeanProperty
     @Override
     public float calculateAverageRating(LocalDate from, LocalDate to) {
         // TODO implement query
-        return 3.4f;
+        return jdbcTemplate.queryForObject("select avg(rating) from secret_retro.feedbacks where created_at between " +
+                "to_date('"+from.toString()+"','YYYY-MM-DD') and to_date('"+to.toString()+"','YYYY-MM-DD')", Float.class);
+
     }
 
     @Override
