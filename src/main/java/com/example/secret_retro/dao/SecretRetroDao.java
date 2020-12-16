@@ -24,7 +24,10 @@ import java.util.Map;
 public class SecretRetroDao implements ISecretRetroDao {
 
     private static final String INSERT_FEEDBACK = "INSERT INTO secret_retro.feedbacks (bad, good, rating) VALUES(?, ?, ?);";
-    private static final String SELECT_DAILY_RATINGS = "SELECT created_at, rating FROM secret_retro.feedbacks where created_at >= :from and created_at <= :to order by created_at asc";
+    private static final String SELECT_DAILY_RATINGS = "SELECT created_at, avg(rating) as rating FROM secret_retro.feedbacks where created_at >= :from and created_at <= :to " +
+            " group by(created_at)" +
+            " order by created_at asc";
+
     @Autowired
     private MainConfig mainConfig;
 

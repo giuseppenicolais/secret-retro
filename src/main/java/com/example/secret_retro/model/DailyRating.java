@@ -11,6 +11,6 @@ public class DailyRating {
     @JsonProperty("created_at")
     private String createdAt;
     @JsonProperty("rating")
-    private int dailyRating;
+    private float dailyRating;
 
 }

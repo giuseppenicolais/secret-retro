@@ -26,10 +26,15 @@ public class SecretRetroService implements ISecretRetroService {
     @Override
     public void feedMe(FeedMeBody payload) {
 
-        String date = payload.getDate();
-        if(StringUtils.isBlank(payload.getDate())){
-            date = DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now());
-        }
+
+//        String date = payload.getDate();
+//        if(StringUtils.isBlank(payload.getDate())){
+//            date = DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now());
+//        }
+
+        int minusDay = (int) (Math.random() * 30 + 1);
+        LocalDate randomMonthlyDate = LocalDate.now().minus(minusDay, ChronoUnit.DAYS);
+        String date = DateTimeFormatter.ISO_LOCAL_DATE.format(randomMonthlyDate);
         String badLabel = payload.getLabelBad().toLowerCase().trim();
         String goodLabel = payload.getLabelGood().toLowerCase().trim();
 
