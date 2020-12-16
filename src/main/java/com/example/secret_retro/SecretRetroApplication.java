@@ -9,5 +9,4 @@ public class SecretRetroApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SecretRetroApplication.class, args);
 	}
-
 }
