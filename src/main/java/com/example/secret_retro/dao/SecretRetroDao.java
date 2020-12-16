@@ -23,7 +23,7 @@ import java.util.Map;
 @Repository
 public class SecretRetroDao implements ISecretRetroDao {
 
-    private static final String INSERT_FEEDBACK = "INSERT INTO secret_retro.feedbacks (bad, good, rating) VALUES(?, ?, ?);";
+    private static final String INSERT_FEEDBACK = "INSERT INTO secret_retro.feedbacks (created_at, bad, good, rating) VALUES(?, ?, ?, ?);";
     private static final String SELECT_DAILY_RATINGS = "SELECT created_at, avg(rating) as rating FROM secret_retro.feedbacks where created_at >= :from and created_at <= :to " +
             " group by(created_at)" +
             " order by created_at asc";
@@ -41,11 +41,11 @@ public class SecretRetroDao implements ISecretRetroDao {
     }
 
 
-BeanPropertyRowMapper<BubbleData> bubbleDataBeanPropertyRowMapper = BeanPropertyRowMapper.newInstance(BubbleData.class);
+    BeanPropertyRowMapper<BubbleData> bubbleDataBeanPropertyRowMapper = BeanPropertyRowMapper.newInstance(BubbleData.class);
 
     @Override
     public void insertFeedback(String date, String goodLabel, String badLabel, int rating) {
-        jdbcTemplate.update(INSERT_FEEDBACK, badLabel, goodLabel, rating);
+        jdbcTemplate.update(INSERT_FEEDBACK, Date.valueOf(date), badLabel, goodLabel, rating);
         log.info("Feedback successfully inserted");
     }
 
@@ -59,11 +59,6 @@ BeanPropertyRowMapper<BubbleData> bubbleDataBeanPropertyRowMapper = BeanProperty
 
     @Override
     public List<BubbleData> getLabelsAnalytics(LocalDate from, LocalDate to) {
-        // TODO implement query
-        //BubbleData b1 = BubbleData.builder().label("wfh").type(LabelType.BAD.toString()).value(10).build();
-        //BubbleData b2 = BubbleData.builder().label("spring planning").type(LabelType.GOOD.toString()).value(3).build();
-       //BubbleData b3 = BubbleData.builder().label("P1 bugfix").type(LabelType.GOOD.toString()).value(2).build();
-
         List<BubbleData> bubbleDataList = jdbcTemplate.query( "select count(bad) as value, bad as label, 'BAD' as type from secret_retro.feedbacks group by bad",
                 bubbleDataBeanPropertyRowMapper);
         bubbleDataList.addAll(jdbcTemplate.query( "select count(good) as value, good as label, 'GOOD' as type from secret_retro.feedbacks group by good",
