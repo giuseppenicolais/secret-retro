@@ -1,6 +1,7 @@
 package com.example.secret_retro.controller;
 
 import com.example.secret_retro.model.FeedMeBody;
+import com.example.secret_retro.model.Feedback;
 import com.example.secret_retro.service.SecretRetroService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,5 +33,14 @@ public class SecretRetroController implements ISecretRetroController {
     {
         secretRetroService.feedMe(payload);
         return new ResponseEntity<>("Request successfully processed", HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/bubble", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Feedback bubble() throws Exception
+    {
+        Feedback data = secretRetroService.getLastMonthAnalytics();
+        log.info("Request successfully processed {}",data);
+        return data;
     }
 }
