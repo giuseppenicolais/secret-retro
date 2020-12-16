@@ -29,16 +29,11 @@ public class SecretRetroService implements ISecretRetroService {
         if(StringUtils.isBlank(payload.getDate())){
             date = DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now());
         }
-
         String badLabel = payload.getLabelBad().toLowerCase().trim();
         String goodLabel = payload.getLabelGood().toLowerCase().trim();
-        //TODO any transformations ??
-
-        // TODO transactional with mongo ?
 
         log.info("Feeding the database with good: {} - bad: {} - rating: {} - date: {}", payload.getLabelGood(), payload.getLabelBad(), payload.getDailyRating(), date);
-        secretRetroDao.insertFeedback(date, goodLabel, badLabel);
-        secretRetroDao.insertDailyRating(date, payload.getDailyRating());
+        secretRetroDao.insertFeedback(date, goodLabel, badLabel, payload.getDailyRating());
     }
 
     /**

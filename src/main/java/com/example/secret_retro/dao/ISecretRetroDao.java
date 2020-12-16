@@ -6,9 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ISecretRetroDao {
-    void insertFeedback(String date, String type, String label);
-
-    void insertDailyRating(String date, int dailyRating);
+    void insertFeedback(String date, String type, String label, int rating);
 
     float calculateAverageRating(LocalDate from, LocalDate to);
 
